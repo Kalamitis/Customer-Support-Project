@@ -109,6 +109,14 @@ def new_post():
     return render_template('create_post.html', title='New Post',
                            form=form, legend='New Post')
 
+@app.route("/archive")
+def archive():
+    return render_template('archive.html', title='Archive')
+
+@app.route("/search")
+def search():
+    return render_template('search.html', title='Search')
+
 
 @app.route("/post/<int:post_id>")
 def post(post_id):
