@@ -12,7 +12,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 @app.route("/home")
 def home():
     page = request.args.get('page', 1, type=int)
-    posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)
+    posts = Post.query.filter_by(archived = False).order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)
     return render_template('home.html', posts=posts)
 
 
@@ -31,7 +31,7 @@ def register():
         user = User(username=form.username.data, email=form.email.data, password=hashed_password)
         db.session.add(user)
         db.session.commit()
-        flash('Your account has been created!', 'success')
+        flash('Your account has been created! You are now able to log in', 'success')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
@@ -101,7 +101,7 @@ def new_post():
         post = Post(title=form.title.data, customer=form.customer.data, microscope=form.microscope.data, country=form.country.data,
         date_req = form.date_req.data, problem_disc = form.problem_disc.data, os = form.os.data, digistar = form.digistar.data, 
         gis = form.gis.data, people_inv = form.people_inv.data, actions = form.actions.data, spares = form.spares.data, 
-        date_fix =form.date_fix.data, warranty = form.warranty.data, notes = form.notes.data, author=current_user)
+        date_fix =form.date_fix.data, warranty = form.warranty.data, notes = form.notes.data, archived = form.archived.data, author=current_user)
         db.session.add(post)
         db.session.commit()
         flash('Post created!', 'success')
@@ -111,24 +111,16 @@ def new_post():
 
 @app.route("/archive")
 def archive():
-    return render_template('archive.html', title='Archive')
-
-
-@app.route('/search', methods=['GET', 'POST'])
-@login_required
-def search():
-    form = SearchForm()
-        if form.validate_on_submit():
-        '''posts = posts.filter(Post.microscope.like('%' + searchForm.microName.data + '%'))'''
-        search_microscope = session.query(Post).filter_by(microscope='microName').all()
-        return redirect(url_for('search_results'))
-    return render_template('search.html')
-
-@app.route('/search_results', methods=['GET'])
-def search_results():
     page = request.args.get('page', 1, type=int)
-    posts = posts.order_by(Post.microscope).all()
-    return render_template('search_results.html', posts=posts)
+    posts = Post.query.filter_by(archived = True).order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)
+    return render_template('archive.html', posts=posts)
+
+@app.route("/search")
+def search():
+    search = SearchForm(request.form)
+    if request.method == 'POST':
+        return search_results(search)
+    return render_template('search.html', title='Search', form=search)
 
 
 @app.route("/post/<int:post_id>")
@@ -160,6 +152,7 @@ def update_post(post_id):
         post.date_fix =form.date_fix.data
         post.warranty = form.warranty.data
         post.notes = form.notes.data
+        post.archived = form.archived.data
         db.session.commit()
         flash('Post updated', 'success')
         return redirect(url_for('post', post_id=post.id))
@@ -179,6 +172,7 @@ def update_post(post_id):
         form.date_fix.data = post.date_fix
         form.warranty.data = post.warranty
         form.notes.data = post.notes
+        post.archived = form.archived.data
     return render_template('create_post.html', title='Update Post',
                            form=form, legend='Update Post')
 

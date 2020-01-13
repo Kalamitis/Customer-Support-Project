@@ -1,5 +1,17 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h1>Search posts</h1>
-    <p></p>
+<div clas='content-section'>
+  <form method=post action="">
+    <fieldset class='form-group'>
+      <legend class="border-bottom mb-4">Search</legend>
+      <div class="form-group">
+        {{ form.microName.label(class="form-control-label") }}
+        {{ form.microName(class="form-control form-control-lg") }}
+      </div>
+  </form>
+  </fieldset>
+  <div class="form-group">
+    {{ form.submit(class="btn btn-outline-info") }}
+  </div>
+</div>
 {% endblock content %}

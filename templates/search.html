@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block content %}
+	<h1>Search posts</h1>
+    <p></p>
+<form method=post>
+<div class="row">
+  <div class="col-md-6 select-outline">
+
+    <select class="mdb-select md-form md-outline colorful-select dropdown-primary">
+      <option value="" disabled selected>Search by:</option>
+      <option value="1">Customer</option>
+      <option value="2">Microscope</option>
+      <option value="3">Digistar</option>
+    </select>
+  </div>
+</div>
+<div class="input-group mb-3">
+  <input type="text" class="form-control" placeholder="Search" aria-label="Recipient's username" aria-describedby="button-addon2">
+  <div class="input-group-append">
+    <button class="btn btn-outline-secondary" type="button" id="button-addon2">Search</button>
+  </div>
+</div>
+</form>
+{% endblock content %}
