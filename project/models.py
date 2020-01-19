@@ -38,6 +38,7 @@ class Post(db.Model):
     date_fix = db.Column(db.Text, nullable=False)
     warranty = db.Column(db.Text, nullable=False)
     notes = db.Column(db.Text, nullable=False)
+    archived = db.Column(db.Boolean, default=False, nullable=False)
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 

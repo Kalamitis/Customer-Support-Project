@@ -73,8 +73,4 @@ class PostForm(FlaskForm):
     warranty = StringField('Warranty')
     notes = TextAreaField('Notes')
     submit = SubmitField('Post')
-
-
-class SearchForm(FlaskForm):
-    microName = StringField('Search microscope', validators=[DataRequired()])
-    submit = SubmitField('Search')
+    archived = BooleanField('Archived')
